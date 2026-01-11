@@ -1,0 +1,65 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 8352,
+                "file_path": "results\\DrivingStraight\\My Behavior\\My Behavior-8352.onnx",
+                "reward": -6.0886741777261095,
+                "creation_time": 1767747084.7569273,
+                "auxillary_file_paths": [
+                    "results\\DrivingStraight\\My Behavior\\My Behavior-8352.pt"
+                ]
+            },
+            {
+                "steps": 59312,
+                "file_path": "results\\DrivingStraight\\My Behavior\\My Behavior-59312.onnx",
+                "reward": null,
+                "creation_time": 1767747542.9090142,
+                "auxillary_file_paths": [
+                    "results\\DrivingStraight\\My Behavior\\My Behavior-59312.pt"
+                ]
+            },
+            {
+                "steps": 69680,
+                "file_path": "results\\DrivingStraight\\My Behavior\\My Behavior-69680.onnx",
+                "reward": null,
+                "creation_time": 1767747602.1860583,
+                "auxillary_file_paths": [
+                    "results\\DrivingStraight\\My Behavior\\My Behavior-69680.pt"
+                ]
+            },
+            {
+                "steps": 80048,
+                "file_path": "results\\DrivingStraight\\My Behavior\\My Behavior-80048.onnx",
+                "reward": null,
+                "creation_time": 1767747673.4733167,
+                "auxillary_file_paths": [
+                    "results\\DrivingStraight\\My Behavior\\My Behavior-80048.pt"
+                ]
+            },
+            {
+                "steps": 90416,
+                "file_path": "results\\DrivingStraight\\My Behavior\\My Behavior-90416.onnx",
+                "reward": null,
+                "creation_time": 1767747773.549921,
+                "auxillary_file_paths": [
+                    "results\\DrivingStraight\\My Behavior\\My Behavior-90416.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 90416,
+            "file_path": "results\\DrivingStraight\\My Behavior.onnx",
+            "reward": null,
+            "creation_time": 1767747773.549921,
+            "auxillary_file_paths": [
+                "results\\DrivingStraight\\My Behavior\\My Behavior-90416.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.2.0.dev0",
+        "torch_version": "2.2.2+cpu"
+    }
+}

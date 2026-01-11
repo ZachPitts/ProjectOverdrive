@@ -1,0 +1,65 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 500019,
+                "file_path": "results\\Driving2\\My Behavior\\My Behavior-500019.onnx",
+                "reward": null,
+                "creation_time": 1767742184.895349,
+                "auxillary_file_paths": [
+                    "results\\Driving2\\My Behavior\\My Behavior-500019.pt"
+                ]
+            },
+            {
+                "steps": 500019,
+                "file_path": "results\\Driving2\\My Behavior\\My Behavior-500019.onnx",
+                "reward": null,
+                "creation_time": 1767742373.185898,
+                "auxillary_file_paths": [
+                    "results\\Driving2\\My Behavior\\My Behavior-500019.pt"
+                ]
+            },
+            {
+                "steps": 500019,
+                "file_path": "results\\Driving2\\My Behavior\\My Behavior-500019.onnx",
+                "reward": null,
+                "creation_time": 1767742560.030207,
+                "auxillary_file_paths": [
+                    "results\\Driving2\\My Behavior\\My Behavior-500019.pt"
+                ]
+            },
+            {
+                "steps": 500019,
+                "file_path": "results\\Driving2\\My Behavior\\My Behavior-500019.onnx",
+                "reward": null,
+                "creation_time": 1767742648.0544765,
+                "auxillary_file_paths": [
+                    "results\\Driving2\\My Behavior\\My Behavior-500019.pt"
+                ]
+            },
+            {
+                "steps": 500019,
+                "file_path": "results\\Driving2\\My Behavior\\My Behavior-500019.onnx",
+                "reward": null,
+                "creation_time": 1767742776.9147472,
+                "auxillary_file_paths": [
+                    "results\\Driving2\\My Behavior\\My Behavior-500019.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500019,
+            "file_path": "results\\Driving2\\My Behavior.onnx",
+            "reward": null,
+            "creation_time": 1767742776.9147472,
+            "auxillary_file_paths": [
+                "results\\Driving2\\My Behavior\\My Behavior-500019.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.2.0.dev0",
+        "torch_version": "2.2.2+cpu"
+    }
+}

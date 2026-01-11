@@ -1,0 +1,65 @@
+{
+    "My Behavior": {
+        "checkpoints": [
+            {
+                "steps": 64972,
+                "file_path": "results\\Driving1\\My Behavior\\My Behavior-64972.onnx",
+                "reward": null,
+                "creation_time": 1767739437.567815,
+                "auxillary_file_paths": [
+                    "results\\Driving1\\My Behavior\\My Behavior-64972.pt"
+                ]
+            },
+            {
+                "steps": 121594,
+                "file_path": "results\\Driving1\\My Behavior\\My Behavior-121594.onnx",
+                "reward": 2719.800880432129,
+                "creation_time": 1767739871.169353,
+                "auxillary_file_paths": [
+                    "results\\Driving1\\My Behavior\\My Behavior-121594.pt"
+                ]
+            },
+            {
+                "steps": 284129,
+                "file_path": "results\\Driving1\\My Behavior\\My Behavior-284129.onnx",
+                "reward": 1191.0016028086345,
+                "creation_time": 1767740191.9734573,
+                "auxillary_file_paths": [
+                    "results\\Driving1\\My Behavior\\My Behavior-284129.pt"
+                ]
+            },
+            {
+                "steps": 291326,
+                "file_path": "results\\Driving1\\My Behavior\\My Behavior-291326.onnx",
+                "reward": -188.3778993818495,
+                "creation_time": 1767740282.1393383,
+                "auxillary_file_paths": [
+                    "results\\Driving1\\My Behavior\\My Behavior-291326.pt"
+                ]
+            },
+            {
+                "steps": 300703,
+                "file_path": "results\\Driving1\\My Behavior\\My Behavior-300703.onnx",
+                "reward": -335.46508401234945,
+                "creation_time": 1767740481.4145863,
+                "auxillary_file_paths": [
+                    "results\\Driving1\\My Behavior\\My Behavior-300703.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 300703,
+            "file_path": "results\\Driving1\\My Behavior.onnx",
+            "reward": -335.46508401234945,
+            "creation_time": 1767740481.4145863,
+            "auxillary_file_paths": [
+                "results\\Driving1\\My Behavior\\My Behavior-300703.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.2.0.dev0",
+        "torch_version": "2.2.2+cpu"
+    }
+}
