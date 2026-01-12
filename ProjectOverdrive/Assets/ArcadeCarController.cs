@@ -11,6 +11,10 @@ public class ArcadeCarController : MonoBehaviour
     [SerializeField] private Transform accelerationPoint;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private InputController inputController;
+    [SerializeField] private GameObject frontLeftWheel;
+    [SerializeField] private GameObject frontRightWheel;
+    [SerializeField] private GameObject backLeftWheel;
+    [SerializeField] private GameObject backRightWheel;
 
     [Header("Suspension Settings")]
     [SerializeField] private float springStiffness;
@@ -33,6 +37,17 @@ public class ArcadeCarController : MonoBehaviour
     [SerializeField] private float steerStrength = 15f;
     [SerializeField] private AnimationCurve steeringCurve;
     [SerializeField] private float dragCoefficient = 1f;
+    [SerializeField] private float steerResponse = 10f;
+    [SerializeField] private float yawDamping = 0.5f;
+    private float steerInputSmoothed = 0f;
+    private float wheelSpinAngle;
+
+    [Header("Power and Drag")]
+    [SerializeField] private float engineAcceleration = 10f;
+    [SerializeField] private AnimationCurve enginePowerVsSpeed = AnimationCurve.EaseInOut(0f, 1f, 1f, 0.2f);
+
+    [SerializeField] private float aeroDragAccel = 10f;
+    [SerializeField] private AnimationCurve aeroDragVsSpeed = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     public Vector3 currentCarLocalVelocity = Vector3.zero;
     public float currentSpeed;
@@ -45,7 +60,24 @@ public class ArcadeCarController : MonoBehaviour
             GetInput();
         }
 
-            currentSpeed = currentCarLocalVelocity.magnitude;
+        currentSpeed = currentCarLocalVelocity.magnitude;
+
+        float wheelAngle = steerInput * 30f;
+        float forwardSpeed = currentCarLocalVelocity.z;
+        float angularSpeedRad = forwardSpeed / wheelRadius;
+        float angularSpeedDeg = angularSpeedRad * Mathf.Rad2Deg;
+
+        
+
+        float deltaRotation = angularSpeedDeg * Time.deltaTime;
+        wheelSpinAngle -= deltaRotation;
+
+        Quaternion spin = Quaternion.Euler(wheelSpinAngle, 180, 0);
+
+        frontLeftWheel.transform.localRotation = Quaternion.Euler(wheelSpinAngle, 180 + wheelAngle, 0);
+        frontRightWheel.transform.localRotation = Quaternion.Euler(wheelSpinAngle, 180 + wheelAngle, 0);
+        backLeftWheel.transform.localRotation = spin;
+        backRightWheel.transform.localRotation = spin;
 
     }
 
@@ -93,7 +125,12 @@ public class ArcadeCarController : MonoBehaviour
     private void GetInput()
     {
         moveInput = inputController.throttle;
-        steerInput = inputController.steering;
+
+        // smooth steering input in fixedUpdate-time
+        float target = inputController.steering;
+        steerInputSmoothed = Mathf.Lerp(steerInputSmoothed, target, steerResponse * Time.fixedDeltaTime);
+
+        steerInput = steerInputSmoothed;
     }
     public void SetInputs(float forward, float steering)
     {
@@ -124,7 +161,34 @@ public class ArcadeCarController : MonoBehaviour
 
     private void Acceleration()
     {
-        carRB.AddForceAtPosition(acceleration * moveInput * transform.forward, accelerationPoint.position, ForceMode.Acceleration);
+        //carRB.AddForceAtPosition(acceleration * moveInput * transform.forward, accelerationPoint.position, ForceMode.Acceleration);
+
+        // forward speed normalized
+        float speed01 = Mathf.Clamp01(Mathf.Abs(currentCarLocalVelocity.z) / maxSpeed);
+
+        // engine pull fades with speed
+        float engineFactor = enginePowerVsSpeed.Evaluate(speed01);
+        Vector3 engineAccelerationVelocity = transform.forward * (engineAcceleration * moveInput * engineFactor);
+
+        // aero drag grows with speed
+        // drag should oppose current velocity direction
+        Vector3 v = carRB.linearVelocity;
+        float vMag = v.magnitude;
+        if (vMag > 0.01f)
+        {
+            float dragFactor = aeroDragVsSpeed.Evaluate(speed01);
+
+            // quadratic-ish drag feel
+            float quad = speed01 * speed01;
+
+            Vector3 dragAcceleration = -(v / vMag) * (aeroDragAccel * dragFactor * quad);
+
+            carRB.AddForce(dragAcceleration, ForceMode.Acceleration);
+        }
+
+        // apply engine at your acceleration point
+        carRB.AddForceAtPosition(engineAccelerationVelocity, accelerationPoint.position, ForceMode.Acceleration);
+
     }
 
     private void Deceleration()
@@ -134,14 +198,38 @@ public class ArcadeCarController : MonoBehaviour
 
     private void Turn()
     {
-        carRB.AddRelativeTorque(steerStrength * steerInput * steeringCurve.Evaluate(Mathf.Abs(carVelocityRatio)) * Mathf.Sign(carVelocityRatio) * carRB.transform.up, ForceMode.Acceleration);
+        // local forward speed
+        float forwardSpeed = currentCarLocalVelocity.z;
+
+        // 0..1 speed factory based on how fast we're moving
+        float speed01 = Mathf.Clamp01(Mathf.Abs(forwardSpeed / maxSpeed));
+
+        float steerFactor = steeringCurve.Evaluate(speed01);
+        
+        // if nearly stoppped, allow steering
+        float direction = (Mathf.Abs(forwardSpeed) < 0.5f) ? 1f : Mathf.Sign(forwardSpeed);
+
+        // yaw torque
+        float yawTorque = steerStrength * steerInput * steerFactor * direction;
+
+        carRB.AddTorque(transform.up * yawTorque, ForceMode.Acceleration);
+
+        float throttle01 = Mathf.Clamp01(Mathf.Abs(moveInput));
+
+        float yawRate = Vector3.Dot(carRB.angularVelocity, transform.up);
+        float dampScale = Mathf.Lerp(1.0f, 0.2f, throttle01);
+        carRB.AddTorque(-transform.up * yawRate * yawDamping * dampScale, ForceMode.Acceleration);
+
     }
 
     private void SidewaysDrag()
     {
         float currentSidewaysSpeed = currentCarLocalVelocity.x;
 
-        float dragMagnitude = -currentSidewaysSpeed * dragCoefficient;
+        float throttle01 = Mathf.Clamp01(Mathf.Abs(moveInput));
+        float gripScale = Mathf.Lerp(1.0f, 0.5f, throttle01);
+
+        float dragMagnitude = -currentSidewaysSpeed * dragCoefficient * gripScale;
 
         Vector3 dragForce = transform.right * dragMagnitude;
 
